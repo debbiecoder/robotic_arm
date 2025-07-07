@@ -54,11 +54,12 @@ except KeyboardInterrupt:
 
 
 import pigpio 
+import time
 
 ENCODER_A = 17
 ENCODER_B = 21
-ENCODER_RESOLUTION = (((1 + (46 / 17)) * (1 + (46 / 17))) * (1 + (46 / 11)) * 28) 
-
+#ENCODER_RESOLUTION = (((1 + (46 / 17))) * (1 + (46 / 17))) * (1 + (46 / 11)) 
+ENCODER_RESOLUTION = 1800
 
 pi = None
 encoder_val = 0
@@ -70,6 +71,7 @@ def encoder_callback(gpio, level, tick):
     
     state_A = pi.read(ENCODER_A)
     state_B = pi.read(ENCODER_B)
+    #print("state a:", state_A, "state b:", state_B)
     
     if state_A != last_A:
         if state_A == state_B:
@@ -85,6 +87,7 @@ def encoder_callback(gpio, level, tick):
     
     last_A = state_A
     last_B = state_B
+    #print("encoder value:", encoder_val)
     
     
 def init_encoder():
@@ -113,13 +116,8 @@ def read_encoder_val():
     return encoder_val
 
 def read_motor_pos():
-    global encoder_val, ENCODER_RESOLUTION
-    angle_deg = ((encoder_val / ENCODER_RESOLUTION) * 360)
-    
-    if angle_deg <= 0:
-        angle_deg += 360
-    elif angle_deg >= 360:
-        angle_deg -= 360
+    global encoder_val, ENCODER_RESOLUTION    
+    angle_deg = ((encoder_val / ENCODER_RESOLUTION) * 360) % 360
     
     return angle_deg
 
@@ -128,6 +126,7 @@ def wait():
         print("Starting Encoder read")
         while True:
             print(f"Position: {read_motor_pos()} deg, Encoder_Val: {read_encoder_val()}")
+            time.sleep(0.1)
             pass
     except Exception as E:
         print(f"Exception: {E}")
