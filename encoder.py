@@ -57,8 +57,8 @@ import pigpio
 
 ENCODER_A = 17
 ENCODER_B = 21
-ENCODER_RESOLUTION = (((1 + (46 / 17)) * (1 + (46 / 17))) * (1 + (46 / 11)) * 28) 
-
+#ENCODER_RESOLUTION = (((1 + (46 / 17)) * (1 + (46 / 17))) * (1 + (46 / 11)) * 28) 
+ENCODER_RESOLUTION = 1800
 
 pi = None
 encoder_val = 0
